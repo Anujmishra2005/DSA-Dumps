@@ -15,24 +15,23 @@ struct Node{
 
 class Solution{
 public:
-    vector<int>InOrderTraversal(Node* root){
-        vector<int>inorder;
-        Node* node = root;
-        stack<Node*>st;
-        while(true){
-            if(node != NULL){
-                st.push(node);
-                node = node->left;
-            }
-            else{
-                if(st.empty() == true) break;
-                node = st.top();
-                st.pop();
-                inorder.push_back(node->data);
-                node = node->right;
-            }
+    vector<int>PostOrderTraversal(Node* root){
+        vector<int>postorder;
+        if(root == NULL) return postorder;
+        stack<Node*>stk1,stk2;
+        stk1.push(root);
+        while(!stk1.empty()){
+            root = stk1.top();
+            stk1.pop();
+            stk2.push(root);
+            if(root->left != NULL) stk1.push(root->left);
+            if(root->right != NULL) stk1.push(root->right);
         }
-        return inorder;
+        while(!stk2.empty()){
+            postorder.push_back(stk2.top()->data);
+            stk2.pop();
+        }
+        return postorder;
     }
 };
 
@@ -43,14 +42,15 @@ int main(){
     root->right = new Node(3);
     root->left->left = new Node(4);
     root->left->right = new Node(5);
-    root->left->right->left = new Node(6);
-    root->left->right->right = new Node(7);
+    root->right->left = new Node(6);
+    root->right->left->right = new Node(7);
+    root->right->left->right->right = new Node(8);
 
     Solution sol;
-    vector<int>InOrder = sol.InOrderTraversal(root);
+    vector<int>PostOrder = sol.PostOrderTraversal(root);
 
-    cout << "Iterative Method InOrder Traversal of the Above Tree :- ";
-    for(int val:InOrder) cout << val << " ";
+    cout << "Iterative Method PostOrder Traversal With 2 Stack of the Above Tree :- ";
+    for(int val:PostOrder) cout << val << " ";
     cout << endl;
 
 }
